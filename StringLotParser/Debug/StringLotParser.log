@@ -1,0 +1,34 @@
+﻿Build started 2/17/2018 8:37:24 PM.
+     1>Project "C:\Users\svankayalapati\Projects\StringLotParser\StringLotParser\StringLotParser.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\StringLotParser.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Parser.cpp
+         Parser.cpp
+     1>c:\users\svankayalapati\projects\stringlotparser\stringlotparser\parser.cpp(35): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\string.h(105) : see declaration of 'strcpy'
+     1>c:\users\svankayalapati\projects\stringlotparser\stringlotparser\parser.cpp(87): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\time.inl(112) : see declaration of 'localtime'
+     1>c:\users\svankayalapati\projects\stringlotparser\stringlotparser\parser.cpp(271): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : see declaration of 'sprintf'
+     1>c:\users\svankayalapati\projects\stringlotparser\stringlotparser\parser.cpp(299): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _getch. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\conio.h(128) : see declaration of 'getch'
+       ManifestResourceCompile:
+         All outputs are up-to-date.
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\svankayalapati\Projects\StringLotParser\Debug\StringLotParser.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\StringLotParser.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\svankayalapati\Projects\StringLotParser\Debug\StringLotParser.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\svankayalapati\Projects\StringLotParser\Debug\StringLotParser.lib" /MACHINE:X86 Debug\StringLotParser.exe.embed.manifest.res
+         Debug\Parser.obj
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\StringLotParser.exe.embed.manifest" /manifest Debug\StringLotParser.exe.intermediate.manifest
+         All outputs are up-to-date.
+       LinkEmbedManifest:
+         All outputs are up-to-date.
+         StringLotParser.vcxproj -> C:\Users\svankayalapati\Projects\StringLotParser\Debug\StringLotParser.exe
+       FinalizeBuildStatus:
+         Deleting file "Debug\StringLotParser.unsuccessfulbuild".
+         Touching "Debug\StringLotParser.lastbuildstate".
+     1>Done Building Project "C:\Users\svankayalapati\Projects\StringLotParser\StringLotParser\StringLotParser.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.14
