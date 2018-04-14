@@ -8,13 +8,20 @@
 #include <stdint.h>
 #include <conio.h>
 
+#define LINE_BITS 4
+#define DATE_BITS 7
+#define YEAR_BITS 16
+#define LOCATION_BITS 22
+#define PRODUCTID_BITS 25
+#define ENGINEERING_BITS 30
+
 #define LOT_MASK ((1<<4) - 1)
-#define LINE_MASK ((1<<3) -1)<<4
-#define DATE_MASK ((1<<9) -1)<<7
-#define YEAR_MASK ((1<<6) -1)<<16
-#define LOCATION_MASK ((1<<3) -1)<<22
-#define PRODUCTID_MASK ((1<<6) -1)<<25
-#define ENGINEERING_MASK (1<<1)<<30
+#define LINE_MASK ((1<<3) -1)<<LINE_BITS
+#define DATE_MASK ((1<<9) -1)<<DATE_BITS
+#define YEAR_MASK ((1<<6) -1)<<YEAR_BITS
+#define LOCATION_MASK ((1<<3) -1)<<LOCATION_BITS
+#define PRODUCTID_MASK ((1<<6) -1)<<PRODUCTID_BITS
+#define ENGINEERING_MASK (1<<1)<<ENGINEERING_BITS
 
 enum ERROR_CODE{
 	SUCCESS,
@@ -22,7 +29,9 @@ enum ERROR_CODE{
 	BUILD_LOOKUP_ERROR, 
 	LOCATION_ERROR, 
 	PRODUCT_ERROR,
-	INVALID_DATE
+	INVALID_DATE,
+	INVALID_LOT,
+	INVALID_LINE
 };
 
 struct DateContainer{
@@ -83,11 +92,10 @@ DateContainer* dateLookup(int _dayOfYear, int _year)
 		return NULL;
 
 	}
-//Sairam
+
 	loctimeinfo = localtime(&loctime);
 	instance = (DateContainer*) malloc(sizeof(DateContainer));
 	memset(instance,0,sizeof(DateContainer));
-
 	instance->day = loctimeinfo->tm_mday;
 	instance->month = loctimeinfo->tm_mon;
 
@@ -96,22 +104,11 @@ DateContainer* dateLookup(int _dayOfYear, int _year)
 	//printf ("The date for that day of the year is %s.\n", asctime(loctimeinfo));
 }
 
-/*uint32_t bstr_to_dec(const char * str)
-{   
-uint32_t val = 0;
-
-
-while (*str != '\0')
-val = 2 * val + (*str++ - '0');
-return val;
-}*/
-
 char buildLookup(int buildValue) {
 	switch(buildValue)
 	{
 	case 0:
 		return 'P';
-
 	case 1:
 		return 'E';
 	default: 
@@ -162,129 +159,74 @@ char locationLookup(int locationValue){
 	}
 }
 
-/*Parser::~Parser(void)
-{
-}*/
 
 
 int constructLotEntry (uint32_t _id, char** _lotEntry)
 {
-	//	const char * binary = "11101100010100110001111000100100";->3964870180
-	//Parser instance (binary);
-	//char lotentry[13];
-
 	char* lotentry = (char*)malloc(13*sizeof(char));
 	if(NULL==lotentry)
 	{
-		//log
 		return NO_MEM;
 	}
-	//uint32_t id = (uint32_t) bstr_to_dec(binary);
-	//uint32_t id = 3964870180;
-
+	
 	uint32_t id = _id;
-	//To get the value of Lot
-	//uint32_t mask = (1<<4) - 1;
 	uint32_t lotValue = (id & LOT_MASK);
-	//printf("%d\n",lotValue);
-
-	//To get the value of Line
-	//uint32_t mask1 = ((1<<3) -1)<<4;
-	//uint32_t mask1 = 112;
-	//uint32_t lineValue = (id & mask1)>>4;
 	uint32_t lineValue = (id & LINE_MASK)>>4;
-	//printf("%d\n",lineValue);
-
-	//TO get the value of Date
-	//uint32_t mask2 = ((1<<9) -1)<<7;
-	//uint32_t dateValue = (id & mask2)>>7;
 	uint32_t dateValue = (id & DATE_MASK)>>7;
-	//printf("%d\n",dateValue);
-
-	//To get the value of Year
-	//uint32_t mask3 = ((1<<6) -1)<<16;
-	//uint32_t yearValue = (id & mask3)>>16;
 	uint32_t yearValue = (id & YEAR_MASK)>>16;
-	//printf("%d\n",yearValue);
-
-	//To get the value of Location
-	//uint32_t mask4 = ((1<<3) -1)<<22;
-	//uint32_t locationValue = (id & mask4)>>22;
 	uint32_t locationValue = (id & LOCATION_MASK)>>22;
-	//printf("%d\n",value4);
-	/*if(locationValue == 1){
-	printf("USA\n");
-	}
-	else if (locationValue == 0){
-	printf("China\n");
-	}
-	else{ 
-	printf("Invalid\n");
-	}*/
-
-	//TO get the value of ProductID
-	//uint32_t mask5 = ((1<<6) -1)<<25;
-	//uint32_t productIdValue = (id & mask5)>>25;
 	uint32_t productIdValue = (id & PRODUCTID_MASK)>>25;
-	////printf("%d\n",productIdValue);
-
-	//To get the value of Enginering Build
-	//uint32_t mask6 = (1<<1)<<30;
-	//printf("$$$%d\n", mask6);
-	//uint32_t mask6 = 2147483648;
 	uint32_t engineeringValue = (id & ENGINEERING_MASK)>>31;
-	//printf("%d\n",engineeringValue);
-
-	//printf("%c\n", buildLookup(engineeringValue));
-	//printf("%s\n", productIDLookup(productIdValue));
-	//printf("%c\n", locationLookup(locationValue));
-
 	DateContainer * date = dateLookup(dateValue, yearValue);
-	//printf("%d - %d - %d\n",date->day,date->month + 1, value3 + 2000);
+	
+	if (lotValue == 0){
+	return INVALID_LOT;
+
+	}
+	if (lineValue == 0){
+	return INVALID_LINE;
+	}
 	if(NULL == date){
-	//	fprintf(stderr,"\t%s\n","Invlid Date\n");
 		return INVALID_DATE;
 	}
 
 	char locationId = locationLookup(locationValue);
 	if('0' == locationId)
 	{
-		//fprintf(stderr,"\t%s\n","Invalid Location");
 		return LOCATION_ERROR;
 	}
 
 	char buildId = buildLookup(engineeringValue);
 	if('0' == buildId)
 	{
-	//	fprintf(stderr,"\t%s\n","Invalid Build");
 		return BUILD_LOOKUP_ERROR;
 	}
 
 	char * productId = productIDLookup(productIdValue);
-	if(NULL == productIdValue)
+	if(NULL == productId)
 	{
-		//fprintf(stderr,"\t%s\n","Invalid Product");
 		return PRODUCT_ERROR;
 	}
+	
 
 	sprintf(lotentry, "%c%s%c%02d%02d%02d%d%0X (%X)", buildId,productId, locationId, 
 		date->day,date->month + 1, yearValue, lineValue, lotValue, _id);
-	//printf("%s\n" , lotentry);
 	*_lotEntry = lotentry;
-	//getch();
 	return SUCCESS;
 
 }
-//1 110111 000 111111 111111111 001 0001
-//1 000100 000 010001 101000000 001 0010
+
 int main(){
 
 	int i = 0;
-	unsigned long lots[10] = {3997171601, 2282856466, -1, 2222222222, 99, -99, 'A', 2282815633, 135362833, 806466713 };
-
+		
+	unsigned long lots[20] = {2282815632, 135362817, 806485913, 2324905745, 2119463337,
+		2323607913, 846732844, 3996861652, 2960140517, 70340159, 742104136, 3898969437, 103396586, 
+		2960924286, 1817263830, 2282856466, 2991791660, 1746303581, 2991849388, 33686018 };
+	
 	char * pLot = NULL;
 
-	for (i=0; i<10; i++) {
+	for (i=0; i<20; i++) {
 		printf("%d ", (i+1));
 		if(SUCCESS == constructLotEntry(lots[i] ,&pLot))
 		{
@@ -293,9 +235,6 @@ int main(){
 		else{
 			printf("Invalid Lot (%X)\n", lots[i]);
 		}
-		//free (pLot);
-	
 	}
 getch();
 }
-
